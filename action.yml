@@ -1,0 +1,18 @@
+name: Execute CumulusCI Task
+description: 'Execute a named CumulusCI task'
+inputs:
+  org-name:
+    description: 'Name of the scratch org or persistent org config to use'
+    required: true
+  task-name:
+    description: 'Name of the CumulusCI task to execute'
+    required: true
+runs:
+    using: "composite"
+    steps:
+      - name: Run Task
+        env:
+          CUMULUSCI_SERVICE_github: '{"username": "${{ github.actor }}", "token": "${{ github.token }}", "email": "cci@github.actions" }'
+        run: |
+          cci task run ${{ inputs.task-name }} --org ${{ inputs.org-name }} | tee cumulusci.log
+        shell: bash
